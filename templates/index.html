@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookFlow | Twoja Cyfrowa Biblioteka</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #fcfcfc; }
+        h1, h2 { font-family: 'Playfair Display', serif; }
+        
+        .navbar { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            margin-bottom: 50px;
+        }
+
+        .book-card {
+            border: none;
+            transition: transform 0.3s ease, shadow 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .book-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .book-img {
+            height: 350px;
+            object-fit: cover;
+        }
+
+        .btn-reserve { border-radius: 25px; padding: 10px 25px; font-weight: 600; }
+        
+        .search-bar {
+            max-width: 600px;
+            margin: -40px auto 40px;
+            background: white;
+            padding: 20px;
+            border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg sticky-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="/"><i class="bi bi-book-half me-2"></i>BookFlow</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link px-3" href="#">Katalog</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="#">Moje konto</a></li>
+                    <li class="nav-item ms-lg-3">
+                        <a href="#" class="btn btn-primary btn-reserve shadow-sm text-white">Zaloguj się</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-3 mb-3">Witaj w BookFlow</h1>
+            <p class="lead mb-4">Wypożyczaj ulubione historie jednym kliknięciem.</p>
+        </div>
+    </header>
+
+    <div class="container text-center">
+        <div class="search-bar d-flex shadow mx-auto">
+            <input type="text" class="form-control border-0 px-4" placeholder="Szukaj książki...">
+            <button class="btn btn-primary btn-reserve ms-2 px-4 text-white">Szukaj</button>
+        </div>
+    </div>
+
+    <main class="container my-5">
+        <h2 class="h3 mb-4">Polecane książki</h2>
+        
+        <div class="row g-4">
+            {% for book in books %}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="card h-100 book-card shadow-sm">
+                    <img src="{{ book.image_url }}" class="card-img-top book-img" alt="{{ book.title }}">
+                    <div class="card-body d-flex flex-column">
+                        <div class="mb-2">
+                            {% if book.is_available %}
+                                <span class="badge bg-success">Dostępna</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Wypożyczona</span>
+                            {% endif %}
+                        </div>
+
+                        <h5 class="card-title text-truncate">{{ book.title }}</h5>
+                        <p class="card-text text-muted small">{{ book.author }}</p>
+                        
+                        <div class="d-grid mt-auto">
+                            {% if book.is_available %}
+                                <a href="{{ url_for('rent_book', book_id=book.id) }}" 
+                                   class="btn btn-outline-primary btn-sm btn-reserve">Wypożycz</a>
+                            {% else %}
+                                <a href="{{ url_for('return_book', book_id=book.id) }}" 
+                                   class="btn btn-warning btn-sm btn-reserve text-dark">Zwróć książkę</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <footer class="bg-dark text-white py-5 mt-5">
+        <div class="container text-center">
+            <p class="mb-2">BookFlow - Twój lokalny punkt kultury</p>
+            <div class="fs-4 mb-3">
+                <i class="bi bi-facebook mx-2"></i>
+                <i class="bi bi-instagram mx-2"></i>
+                <i class="bi bi-twitter-x mx-2"></i>
+            </div>
+            <hr class="w-25 mx-auto opacity-25">
+            <p class="small text-muted mb-0">&copy; 2026 BookFlow System. Wszelkie prawa zastrzeżone.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
