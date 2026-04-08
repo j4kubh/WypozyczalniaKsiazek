@@ -1,0 +1,11 @@
+# Foldery Pythona
+__pycache__/
+venv/
+.env
+
+# Baza danych (nie wrzucamy lokalnego pliku .db)
+instance/
+*.db
+
+# Ustawienia VS Code
+.vscode/
